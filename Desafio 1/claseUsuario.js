@@ -1,5 +1,5 @@
 class Usuario { 
-	constructor(nombre, apellido, libros, mascotas) {
+	constructor(nombre, apellido, mascotas = [], libros = []) {
 		this.nombre = nombre
 		this.apellido = apellido
 		this.libros = libros
@@ -11,28 +11,24 @@ class Usuario {
 	}
 
 	addMascota(string) {
-        this.mascotas.push(string)
+        this.mascotas.push(string);
     }
 
     countMascotas() {
-        return this.mascotas.length
+        return `El usuario posee: ${this.mascotas.length}`;
     }
 
     addLibro(nombre, autor) {
-        this.libros.push({nombre: nombre, autor:autor})
+        this.libros.push({nombre: nombre, autor:autor});
     }
 
     getNombreLibros() {
-        this.libros.map(x => x.nombre)
+        this.libros.map(x => x.nombre);
     }
 	
-	countMascotas() {
-		Usuario.contadorDeMascotas = Usuario.contadorDeMascotas + this.mascotas.length
-		return `El usuario posee: ${Usuario.contadorDeMascotas} mascotas`
-	}
 }
 
-const usuarioDePrueba = new Usuario ("Juan", "Sepulveda")
+const usuarioDePrueba = new Usuario ("Juan", "Sepulveda", ["Luki"])
 
 usuarioDePrueba.getNombreCompleto()
 usuarioDePrueba.addMascota("Lila")
@@ -41,3 +37,4 @@ usuarioDePrueba.countMascotas()
 usuarioDePrueba.addLibro("IT", "Stephen King")
 usuarioDePrueba.addLibro("El Resplandor", "Stephen King")
 usuarioDePrueba.getNombreLibros()
+
