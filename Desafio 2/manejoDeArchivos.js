@@ -5,15 +5,14 @@ const fs = require("fs");
  * @param {json} json 
  * @returns object
  */
- const jsonToObject = (json) => {
-	try {
-		if (json.length > 0) {            
+const jsonToObject = (json) => {
+    try {
+        if (json.length > 0) {            
             return JSON.parse(json);
         } else {            
             return JSON.parse('[]');
         }
-}
-catch (error) {
+    } catch (error) {
 		console.log("Algo salio mal al volver un objecto el JSON.");
 		throw error;
 	}
@@ -35,37 +34,13 @@ const objectToJson = (object) => {
 	}
 };
 
-
-
-/**
- *  Funcion para revisar si existe el archivo y en caso de que no, crearlo llamando a la funcion de crear archivo
- * @param {string} fileName 
- */
-const fileExist = async (fileName) => {
-	if (fs.existsSync(fileName) == false) {
-		await createFile(fileName);
-	}
-};
-
-/**
- * Funcion para crear archivo 
- * @param {string} fileName 
- */
-const createFile = async (fileName) => {
-    try {
-        await fs.promises.writeFile(fileName, "");
-    } catch (error) {
-        throw error;
-    }
-};
-
 /**
  *  Funcion para leer el archivo
  * @param {string} fileName 
  */
 const readFile = async (fileName) => {
 	try {
-		await fs.promises.readFile(fileName, 'utf-8');
+		return await fs.promises.readFile(fileName, 'utf-8');
 	}
 	catch (error) {
 		console.log("Algo salio mal al leer el archivo.");
@@ -89,6 +64,29 @@ const writeFile = async (fileName, json) => {
 	}
 };
 
+/**
+ * Funcion para crear archivo 
+ * @param {string} fileName 
+ */
+const createFile = async (fileName) => {
+    try {
+        await fs.promises.writeFile(fileName, "");
+    } catch (error) {
+        throw error;
+    }
+};
+
+/**
+ *  Funcion para revisar si existe el archivo y en caso de que no, crearlo llamando a la funcion de crear archivo
+ * @param {string} fileName 
+ */
+ const fileExist = async (fileName) => {
+	if (fs.existsSync(fileName) == false) {
+		await createFile(fileName);
+	}
+};
+
+
 class Container {
 
 	constructor(file) {
@@ -100,18 +98,18 @@ class Container {
 		try{
 			// Revisa existencia de archivo, asigna inicio del contador de ID caso contrario toma el ultimo asignado
 			await fileExist(this.file);
-			let countId = 0;
+			let productId = 0;
 			let productsArray = jsonToObject(await readFile(this.file));
 			if (productsArray.length == 0) {
-				countId = 1;
+				productId = 1;
 			} 
 			else {
-				countId = productsArray[productsArray.length -1].id + 1;
+				productId = productsArray[productsArray.length -1].id + 1;
 			}
-			product.id = countId;
+			product.id = productId;
 			// Se agrega el producto y se guarda el archivo retornando el ID del producto 
 			productsArray.push(product);
-			await writeFile(this.fileName, objectToJson(productsArray));
+			await writeFile(this.file, objectToJson(productsArray));
 			return product.id;
 		}
 		catch (error) {
@@ -216,12 +214,16 @@ async function Test() {
 	console.log("Se guardo producto generico 4")
 
 	let id = 1;
-	console.log(`Se busca el producto con el id ${id}` + objectToJson(await productos.getById(id)));
+	console.log(`Se busca el producto con el id ${id}` + objectToJson(await productos.getById(id)));	
 
-	
+    id = 4;
+    console.log(`Se elimina al producto con el id ${id}` + objectToJson(await productos.deleteById(id)));
+    
+	console.log(`Se traen todos los productos \n` + objectToJson(await productos.getAll()));
 
-	
+	console.log(`Se eliminan todos los productos \n` + objectToJson(await productos.deleteAll()));
 	}
+
 
 Test()
 
