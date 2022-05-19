@@ -9,6 +9,8 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use("/api/productos", productRouter);
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
 	console.log("Servidor http escuchando en el puerto: ", PORT);
 });
+
+server.on("error", (error) => console.log(`Error en el servidor ${error}`));
