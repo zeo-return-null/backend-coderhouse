@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- Include Handlebars from a CDN -->
+	<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+	<title>Datos Personales</title>
+</head>
+	<span></span> <!-- Aca se inyecta el HTML-->
+	<script>
+		// Compila el template 
+		
+		const templateString = `
+		<ul>
+		<li>{{nombre}}</li>
+		<li>{{apellido}}</li>
+		<li>{{edad}}</li>
+		<li>{{email}}</li>
+		<li>{{telefono}}</li>
+		</ul>
+		`;
+		const template = Handlebars.compile(templateString);
+		const html = template({
+			nombre: "Joan",
+		apellido: "Reverte",
+		edad: 999,
+		email: "tucorreo@electronico.com",
+		telefono: "No vas a conseguir mi numero tan facil xd",
+		});
+		document.querySelector('span').innerHTML = html;
+	</script>
+</body>
+</html>
