@@ -40,7 +40,7 @@ socketSv.on('connection', (socket) => {
 	});
 	socket.on('new_message', (message) => {             
 	messages.push(message);
-	fs.promises.writeFile('./public/data/mesagges.json', JSON.stringify(messages, null, 2));                           
+	fs.promises.writeFile('./public/data/messages.json', JSON.stringify(messages, null, 2));                           
 	socketSv.sockets.emit('new_event', products, messages); 
 	}); 
 });
