@@ -1,6 +1,6 @@
 const socket = io();
 
-const sendMessage = (ev) => {
+const sendMessage = () => {
 	const author =  document.getElementById('author').value;
 	const text = document.getElementById('text').value;
 	const date = new Date();
@@ -18,12 +18,12 @@ const sendMessage = (ev) => {
 	document.getElementById("text").value="";
 	return false;
 };
-const addProduct = (ev) => {
+const addProduct = () => {
 	const title = document.getElementById("title").value; 
 	const price = document.getElementById("price").value; 
 	const thumbnail = document.getElementById("thumbnail").value; 
 	const product = { title, price, thumbnail };                   
-	socket.emit('addProduct', product);                
+	socket.emit('new_product', product);                
 	document.getElementById("title").value="";
 	document.getElementById("price").value="";
 	document.getElementById("thumbnail").value="";
@@ -44,17 +44,15 @@ const renderData = (product, message) => {
 		document.getElementById('products').innerHTML = productHtml;
 	})
 
-	fetch('/partials/messages.hbs')
+	fetch('/partials/message.hbs')
 	.then((res) => res.text())
 	.then((data) => {
 		const messageTemplate = Handlebars.compile(data);
 		const messageHtml = messageTemplate({
-			author: author,
 			message: message,
-			timestamp: timestamp
 		})
 		document.getElementById('messages').innerHTML = messageHtml;
 	})
 };
 
-socket.on('messages', (messages) => renderMessages(messages));
+socket.on('new_event', (products, messages) => renderData(products, messages));

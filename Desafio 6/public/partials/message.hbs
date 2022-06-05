@@ -1,0 +1,7 @@
+<div>
+    {{#each message }}
+      <h6 class="text-danger"> {{ author }} </h6>
+      <p> [{{ timestamp.day }}/{{ timestamp.month}}/{{ timestamp.year }} 
+      {{ timestamp.hs }}:{{ timestamp.min }}:{{ timestamp.sec }}]: {{ text }}</p>
+    {{/each}}
+</div>

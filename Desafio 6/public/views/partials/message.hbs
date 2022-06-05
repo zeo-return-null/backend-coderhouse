@@ -1,8 +1,0 @@
-{{#if showMessage}}
-{{#each message}}
-	<h6>{{author}} - {{timestamp.day}}/{{timestamp.month}}/{{timestamp.year}} a las {{timestamp.hour}}:{{timestamp.min}}:{{timestamp.sec}} dijo:</h6>
-	<p>{{text}}</p>
-{{/each}}
-{{else}}
-    <h3 class="alert-danger rounded p-3">No hay mensajes</h3>  
-{{/if}}

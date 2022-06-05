@@ -1,0 +1,14 @@
+[
+	{
+		"author": "email@prueba",
+		"text": "Testeando",
+		"timestamp": {
+			"day": 1,
+			"month": 6,
+			"year": 2022,
+			"hs": 12,
+			"min": 30,
+			"sec": 11
+		}
+	}
+]
