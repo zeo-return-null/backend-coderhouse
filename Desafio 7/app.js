@@ -1,18 +1,26 @@
-const express = require('express');
-const { productRouter,cartRouter } = require('./routerController');
+const express = require("express");
+const { productRouter } = require("./routers/productRouter.js");
+const { cartRouter } = require("./routers/cartRouter");
+const moment = require("moment");
+const path = require("path");
 const app = express();
-const PORT = 8080;
 
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-app.use('/productos',productRouter);
-app.use('/carrito',cartRouter);
+app.use("/api/productos", productRouter);
+app.use("/api/carrito", cartRouter);
 
-app.use((req, res, next) => {
-    res.status(404).send({ error: 'No se encuentra la ruta' });
-})
+app.use(function (req, res) {
+	// Solicitud no valida
+	res.json({
+		error: "-2",
+		description: `ruta ${req.originalUrl} metodo ${req.method} no implementado`,
+	});
+});
 
-app.listen(PORT, () => {
-    console.log("Servidor http escuchando en el puerto: ", PORT);
-})
+const port = process.env.PORT || 8080;
+
+app.listen(port, () => {
+	console.log(`Estoy escuchando ${port}`);
+});
