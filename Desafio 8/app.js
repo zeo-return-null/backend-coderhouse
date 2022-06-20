@@ -1,21 +1,21 @@
 const express = require("express");
 const path = require('path');
 const moment = require('moment'); 
-const {productRouter,getAllProducts,saveProduct }= require("./productRouter.js");
+const {productRouter, getAllProducts, saveProduct }= require("./productRouter.js");
 const { engine } = require("express-handlebars");
 const { Server: HttpServer } = require('http');
 const { Server: SocketServer } = require('socket.io');
 const MensajesSqlite = require("./mensajes.js");
-let options_path = path.join(__dirname, 'db','options.js');
-const { optionsSqlite } = require(options_path);
+let optionsPath = path.join(__dirname, 'db','options.js');
+const { optionsSqlite } = require(optionsPath);
 
 const app = express();
 const httpserver = new HttpServer(app);
 const socketServer = new SocketServer(httpserver);
 const PORT = 8080;
 
-const table = 'mensajes';
-let chat = new MensajesSqlite(optionsSqlite,table);
+const tablaChat = 'mensajes';
+let chat = new MensajesSqlite(optionsSqlite, tablaChat);
 
 let views_path = path.join(__dirname, 'views');
 app.use(express.static('public'));

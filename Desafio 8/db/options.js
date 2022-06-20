@@ -1,5 +1,5 @@
 const path = require('path');
-let sqlitePath = path.join(__dirname,'db','ecommerce.sqlite');
+let sqlitePath = path.join(__dirname, 'ecommerce.sqlite');
 
 const optionsSqlite = {
   client: "sqlite3",
@@ -11,10 +11,10 @@ const optionsSqlite = {
 const optionsMySQL = {
   host: "localhost",
   user: "root",
-  port: "3307",
+  port: "3306",
   password: "root",
-  database: "test_db"
+  database: "ecommerce"
 };
 
 
-module.exports = { optionsMySQL, optionsSqlite};
+module.exports = { optionsMySQL, optionsSqlite };

@@ -34,7 +34,7 @@ const enviarProducto = () => {
   return false;
 }
 
-const crearEtiquetasProductos= (producto) => {
+const crearTagsProductos= (producto) => {
   const { id, title, price,thumbnail } = producto;
   return `
   <tr>
@@ -61,9 +61,9 @@ const agregarProductos = (productos) => {
   </table>`
   console.log('pepe')
   console.log(productos);
-  const productos2 = productos.map(producto => crearEtiquetasProductos(producto)).join(" ");
-  const productosFinal = headtable.concat(productos2,foottable);
-  console.log('html:'+productosFinal);
+  const productos2 = productos.map(producto => crearTagsProductos(producto)).join(" ");
+  const productosFinal = headtable.concat(productos2, foottable);
+  console.log('html:'+ productosFinal);
   document.getElementById("products").innerHTML = productosFinal;
 }
 

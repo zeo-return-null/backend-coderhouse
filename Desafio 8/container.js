@@ -1,10 +1,10 @@
 const Knex = require("knex").default;
 
 class Container {
-	constructor(config, table) {
+	constructor(options, table) {
 		this.knex = Knex({
 			client: "mysql2",
-			connection: config,
+			connection: options,
 		});
 		this.table = table;
 	}
