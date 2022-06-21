@@ -69,7 +69,7 @@ class cartContainer {
 			}
 			product.id = index;
 			// Se agrega el producto y se guarda el archivo retornando el ID del producto
-			productsArray.push(product);
+			array.push(product);
 			await arrayToFile(this.file, array);
 			return product.id;
 		} catch (error) {
