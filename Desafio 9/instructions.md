@@ -107,7 +107,9 @@ db.createUser({
 Para testear el usuario se inicio la db con los siguientes comandos
 ```
 mongod --dbpath path_a_db
+
 use ecommerce
+
 db.auth('pepe', 'asd456')
 ```
 Una vez hecho esto, se logró leer los productos pero no modificarlos.
