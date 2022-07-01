@@ -32,7 +32,7 @@ socketSv.on('connection', (socket) => {
 	socket.on('new_product', (product) => {
 		async function saveProduct(productArg) {
 			await productsContainer.save(productArg);
-			const result = await productsContainer.getAll();
+			let result = await productsContainer.getAll();
 			products = result;
 			socketSv.sockets.emit('new_event', products, messages);
 		}

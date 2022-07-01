@@ -1,128 +1,178 @@
 const fs = require("fs");
 
-class Container {
-	constructor(name) {
-		this.fileName = name;
-		this.countID = 0;
-		this.content = [];
-		this.initialize();
+
+/**
+ * Convertir el Json a Objeto 
+ * @param {json} json 
+ * @returns object
+ */
+ const jsonToObject = (json) => {
+    try {
+        if (json.length > 0) {            
+            return JSON.parse(json);
+        } else {            
+            return JSON.parse('[]');
+        }
+    } catch (error) {
+		console.log("Algo salio mal al volver un objecto el JSON.");
+		throw error;
+	}
+};
+
+/**
+ * Convertir el objecto a Json 
+ * @param {object} object
+ * @returns json
+ */
+const objectToJson = (object) => {
+	try {
+		return JSON.stringify(object);
+	}
+	catch (error) {
+		console.log("Algo salio mal al volver JSON el objeto.");
+		throw error;
+	}
+};
+
+/**
+ *  Funcion para leer el archivo
+ * @param {string} fileName 
+ */
+const readFile = async (fileName) => {
+	try {
+		return await fs.promises.readFile(fileName, 'utf-8');
+	}
+	catch (error) {
+		console.log("Algo salio mal al leer el archivo.");
+		throw error;
+	}
+};
+
+/**
+ * Funcion para escribir el archivo
+ * @param {string} fileName 
+ * @param {json} json 
+ * @returns 
+ */
+const writeFile = async (fileName, json) => {
+	try {
+		await fs.promises.writeFile(fileName, json);
+	}
+	catch (error) {
+		console.log("Algo salio mal al escribir el archivo.");
+		throw error;
+	}
+};
+
+/**
+ * Funcion para crear archivo 
+ * @param {string} fileName 
+ */
+const createFile = async (fileName) => {
+    try {
+        await fs.promises.writeFile(fileName, "");
+    } catch (error) {
+        throw error;
+    }
+};
+
+/**
+ *  Funcion para revisar si existe el archivo y en caso de que no, crearlo llamando a la funcion de crear archivo
+ * @param {string} fileName 
+ */
+ const fileExist = async (fileName) => {
+	if (fs.existsSync(fileName) == false) {
+		await createFile(fileName);
+	}
+};
+
+
+module.exports = class Container {
+	constructor(file) {
+		this.file = file;
 	}
 
-	async initialize() {
+	// Funcion para guardar un producto
+	async save(product) {
 		try {
-			let data = await fs.promises.readFile(this.fileName);
-			this.content = JSON.parse(data);
-			for (const element of this.content) {
-				if (element.id > this.countID) this.countID = element.id;
+			// Revisa existencia de archivo, asigna inicio del contador de ID caso contrario toma el ultimo asignado
+			await fileExist(this.file);
+			let productId = 0;
+			let productsArray = jsonToObject(await readFile(this.file));
+			if (productsArray.length == 0) {
+				productId = 1;
+			} else {
+				productId = productsArray[productsArray.length - 1].id + 1;
+			}
+			product.id = productId;
+			// Se agrega el producto y se guarda el archivo retornando el ID del producto
+			productsArray.push(product);
+			await writeFile(this.file, objectToJson(productsArray));
+			return product.id;
+		} catch (error) {
+			console.log("Algo salio mal al guardar el producto.");
+			throw error;
+		}
+	}
+
+	// Funcion para buscar un producto por su ID
+	async getById(id) {
+		try {
+			// Revisa existencia de archivo luego busca en la lista de productos para retornar el producto ingresado
+			await fileExist(this.file);
+			let productsArray = jsonToObject(await readFile(this.file));
+			productsArray = productsArray.filter((product) => {
+				return product.id == id;
+			});
+
+			if (productsArray.length == 0) {
+				return null;
+			} else {
+				return productsArray[0];
 			}
 		} catch (error) {
-			console.log("Aún no hay archivo");
+			console.log("Algo salio mal al buscar el producto.");
+			throw error;
 		}
 	}
 
-	async write() {
-		await fs.promises.writeFile(
-			this.fileName,
-			JSON.stringify(this.content)
-		);
-	}
-
-	/**
-	 * Guarda agrega un producto
-	 * @param {object} product
-	 * @returns Id del producto
-	 */
-	async save(obj) {
-		try{ 
-			this.countID++;
-			obj["id"] = this.countID;
-			this.content.push(obj);
-			this.write();
-			return `El id del objeto añadido es ${this.countID}.`;
-		}
-		catch(error) {
-			console.error(`Ha ocurrido un error: ${error}`);
-		};
-	}
-	/**
-	 * Busca un producto con el id ingreado y lo edita con el objecto ingresado
-	 * @param {int} id
-	 * @param {string} objeto
-	 * @returns Devuelve el producto si existe
-	 */
-	async update(id, obj) {
-		try {
-			const index = this.content.findIndex((objP) => objP.id == id);
-			obj.id = this[index].id;
-			this.content[index] = obj;
-			return obj;
-		}
-		catch(error) {
-			console.error(`Ha ocurrido un error: ${error}`);
-		};
-	}
-	/**
-	 * Busca un producto
-	 * @param {int} id
-	 * @returns Devuelve el producto si existe
-	 */
-	async getById(id) {
-		try{
-			let result;
-			if (this.content !== []) {
-				result = this.content.find((x) => x.id === id);
-				if (result === undefined) {
-					result = null;
-				}
-			} else {
-				result = "El archivo está vacío";
-			}
-			await result;
-		}
-		catch(error) {
-			console.error(`Ha ocurrido un error: ${error}`);
-		}		
-	}
-	/**
-	 *
-	 * @returns Devuelve todos los productos
-	 */
-	async getAll() {
-		try {
-            await this.content;
-        } catch (error) {
-            console.error(`Ha ocurrido un error: ${error}`);
-        }
-	}
-	/**
-	 * Borra el producto con el id ingresado
-	 * @param {int} id
-	 */
+	// Funcion para eliminar un producto por su ID
 	async deleteById(id) {
 		try {
-			let result;
-			if (this.content !== []) {
-				let newContent = this.content.filter((x) => x.id !== id);
-				this.content = newContent;
-				this.write();
-				result = `El producto fue eliminado`;
-			} else {
-				result = `El archivo está vacío`;
-			}
-			await result;
+			// Revisa existencia de archivo, luego filtra la lista de productos para eliminar el producto ingresado
+			await fileExist(this.file);
+			let productsArray = jsonToObject(await readFile(this.file));
+			productsArray = productsArray.filter((product) => {
+				return product.id !== id;
+			});
+			await writeFile(this.file, objectToJson(productsArray));
+		} catch (error) {
+			console.log("Algo salio mal al eliminar un producto.");
+			throw error;
 		}
-		catch(error) {
-			console.error(`Ha ocurrido un error: ${error}`);
-		};
 	}
-	/**
-	 *
-	 * @returns Elimina todos los productos en el contenedor
-	 */
+
+	// Obtener todos los productos de la lista
+	async getAll() {
+		try {
+			// Revisa existencia del archvo, luego retorna el archivo convertido en objeto por consola
+			await fileExist(this.file);
+			return jsonToObject(await readFile(this.file));
+		} catch (error) {
+			console.log(
+				"Algo salio mal al querer mostrar todos los productos."
+			);
+			throw error;
+		}
+	}
+
+	// Eliminar la lista de productos
 	async deleteAll() {
-		this.content = await this.content.splice(0, this.content.length);
-		this.write();
+		try {
+			await createFile(this.file);
+		} catch (error) {
+			console.log("Algo salio mal al eliminar la lista de productos");
+			throw error;
+		}
 	}
 }
-
-module.exports = Container;
