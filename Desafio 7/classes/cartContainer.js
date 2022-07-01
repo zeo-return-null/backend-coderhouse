@@ -83,14 +83,14 @@ class cartContainer {
 		try {
 			// Revisa existencia de archivo luego busca en la lista de productos para retornar el producto ingresado
 			await fileExist(this.file);
-			let productsArray = await fileToArray(this.file);
-			productsArray = productsArray.filter((product) => {
+			let array = await fileToArray(this.file);
+			array = array.filter((product) => {
 				return product.id == id;
 			});
-			if (productsArray[0] == undefined) {
+			if (array[0] == undefined) {
 				return { error: "Parece que no existe el carrito."};
 			} else {
-				return productsArray;
+				return array;
 			}
 		} catch (error) {
 			console.log("Algo salio mal al buscar el producto.");
@@ -101,16 +101,16 @@ class cartContainer {
 	async updateById(product) {
 		try {
 			await fileExist(this.file);
-			let productsArray = await fileToArray(this.file);
-			let productIndex = productsArray.findIndex((productX) => productX.id == product);
+			let array = await fileToArray(this.file);
+			let productIndex = array.findIndex((productX) => productX.id == product);
 			if (productIndex == -1) {
 				return { error: "No se ha encontrado el producto."};
 			}
 			else {
-				productsArray[productIndex].title = product.title;
-				productsArray[productIndex].price = product.price;
-				productsArray[productIndex].thumbnail = product.thumbnail;
-				await arrayToFile(this.file, productsArray);
+				array[productIndex].title = product.title;
+				array[productIndex].price = product.price;
+				array[productIndex].thumbnail = product.thumbnail;
+				await arrayToFile(this.file, array);
 				return { status: "Producto actualizado con exito."};
 			};
 		}
@@ -124,16 +124,16 @@ class cartContainer {
 		try {
 			// Revisa existencia de archivo, luego filtra la lista de productos para eliminar el producto ingresado
 			await fileExist(this.file);
-			let productsArray = await fileToArray(this.file);
+			let array = await fileToArray(this.file);
 			let product = this.getById(id);
 			if(product.error == "") {
 				return product;
 			}
 			else {
-				productsArray = productsArray.filter((product) => {
+				array = array.filter((product) => {
 					return product.id !== id;
 				});
-				await arrayToFile(this.file, productsArray);
+				await arrayToFile(this.file, array);
 				return { IdProductDeleted: id };
 			}
 			
