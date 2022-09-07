@@ -1,0 +1,18 @@
+[2022-08-16T21:59:19.356] [ERROR] default - Error al conectarse a MongoDB
+[2022-08-16T22:26:42.573] [ERROR] default - Error: listen EADDRINUSE: address already in use :::3030
+    at Server.setupListenHandle [as _listen2] (node:net:1432:16)
+    at listenInCluster (node:net:1480:12)
+    at Server.listen (node:net:1568:7)
+    at Function.listen (/home/zeo/Dev/Coderhouse/Curso Backend/Desafio 16/node_modules/express/lib/application.js:618:24)
+    at file:///home/zeo/Dev/Coderhouse/Curso%20Backend/Desafio%2016/src/server.js:80:20
+    at ModuleJob.run (node:internal/modules/esm/module_job:193:25)
+    at async Promise.all (index 0)
+    at async ESMLoader.import (node:internal/modules/esm/loader:541:24)
+    at async loadESM (node:internal/process/esm_loader:91:5)
+    at async handleMainPromise (node:internal/modules/run_main:65:12) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '::',
+  port: 3030
+}
